@@ -1,41 +1,38 @@
 package view;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.security.InvalidKeyException;
 
 import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 import exceptions.NotSatisfiedException;
-import exceptions.ObjNullException;
-import function.DigitSign;
-import function.MyKeyPair;
+import function.SignatureManager;
+
 
 class ViewController {
-	private MyKeyPair myKeyPair;
-	private DigitSign digitSign;
+	private SignatureManager manager;
 	
 	ViewController() {
-		myKeyPair = new MyKeyPair();
-		digitSign = new DigitSign();
+		manager = new SignatureManager();
 	}
 	
-	String btnGenerateKeyHandler() throws ObjNullException{
+	String btnGenerateKeyHandler() throws FileNotFoundException {
 		System.out.println("btnGenerateKey clicked");
 		
 		String directoryPath = exeFileSaver("생성한 키 저장");
 		
 		System.out.println(directoryPath);
 		
-		if(directoryPath == null) {
-			throw new ObjNullException();
+		if(directoryPath != null) {
+			manager.generateAndSaveKeyPair(directoryPath);	
 		}
-		
-		myKeyPair.generateKeyPair();
-		myKeyPair.saveKeyPair(directoryPath);
 		
 		return directoryPath;
 	}
 	
 	String btnSelectPrivateKeyHandler() {
-		String filename = exeFileChooser("Private Key 선택");
+		String filename = exeKeyChooser("Private Key 선택");
 		
 		return filename;
 	}
@@ -47,7 +44,7 @@ class ViewController {
 	}
 	
 	void btnSignHandler(String routePrivateKey, String routeFileForSign)
-			throws ObjNullException, NotSatisfiedException {
+			throws NotSatisfiedException, InvalidKeyException, FileNotFoundException {
 
 		if(routePrivateKey.equals("") ||  routeFileForSign.equals("")) {
 			throw new NotSatisfiedException();
@@ -55,15 +52,9 @@ class ViewController {
 		
 		String directoryPath = exeFileSaver("서명한 파일 저장");
 		
-		if(directoryPath == null) {
-			throw new ObjNullException();
-		}
-		
-		try {
-			digitSign.sign(routeFileForSign, routePrivateKey, directoryPath);
-		} catch (InvalidKeyException e) {
-			// TODO Auto-generated catch block
-			System.err.println("Key가 유효하지 않음");
+		if(directoryPath != null) {
+			manager.signAndSaveFile(routeFileForSign, routePrivateKey, directoryPath);
+			
 		}
 	}
 	
@@ -80,14 +71,13 @@ class ViewController {
 	}
 	
 	String btnSelectPublicKeyHandler() {
-		String filename = exeFileChooser("Public Key 선택");
+		String filename = exeKeyChooser("Public Key 선택");
 		
 		return filename;
 	}
 	
 	boolean btnVerifyHandler(String routeOriginFile, String routeFileForVerify, String routePublicKey) 
-			throws NotSatisfiedException {
-		boolean result = false;
+			throws NotSatisfiedException, InvalidKeyException, FileNotFoundException {
 		
 		if(routeOriginFile.equals("") 
 				|| routeFileForVerify.equals("")
@@ -95,14 +85,8 @@ class ViewController {
 			throw new NotSatisfiedException();
 		}
 		
-		try {
-			result = digitSign.verify(routeOriginFile, routeFileForVerify, routePublicKey);
-		} catch (InvalidKeyException e) {
-			// TODO Auto-generated catch block
-			System.err.println("Key가 유효하지 않음");
-		}
-		
-		return result;
+		return manager.verify(routeOriginFile, routeFileForVerify, routePublicKey);
+
 	}
 	
 	String exeFileChooser(String keyword) {
@@ -120,12 +104,28 @@ class ViewController {
 		return null;
 	}
 	
+	String exeKeyChooser(String keyword) {
+		JFileChooser chooser = new JFileChooser();
+		chooser.setDialogTitle(keyword);
+		chooser.setAcceptAllFileFilterUsed(false);
+		chooser.setCurrentDirectory(new File("."));
+		FileNameExtensionFilter filter = new FileNameExtensionFilter("PEM File", "pem"); // filter 확장자 추가
+        chooser.setFileFilter(filter); // 파일 필터를 추가
+		int returnVal = chooser.showOpenDialog(null);
+
+		if(returnVal == JFileChooser.APPROVE_OPTION)  {
+			File f = chooser.getSelectedFile();
+			return f.getAbsolutePath();
+		}
+
+		return null;
+	}
+	
 	String exeFileSaver(String keyword) {
 		JFileChooser chooser = new JFileChooser();
 		chooser.setDialogTitle(keyword);
 		chooser.setCurrentDirectory(new File("."));
 		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-		
 		int returnVal = chooser.showSaveDialog(null);
 
 		if(returnVal == JFileChooser.APPROVE_OPTION)  {

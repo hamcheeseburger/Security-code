@@ -12,26 +12,27 @@ import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 
-public class MyKeyPair {
+class MyKeyPair {
 	private static final String keyAlgorithm = "RSA";
 	private static final int keyLength = 1024;
-	
+	private static final String publicKeyFileName = "/PublicKey.pem";
+	private static final String privateKeyFileName = "/PrivateKey.pem";
 	private PublicKey publicKey;
 	private PrivateKey privateKey;
 	
-	public MyKeyPair() {
+	MyKeyPair() {
 		publicKey = null;
 		privateKey = null;
 	}
 	
-	public void generateKeyPair() {
+	boolean generateKeyPair() {
 		KeyPair keyPair = null;
-		
+		boolean result = false;
 		try {
 			KeyPairGenerator generator = KeyPairGenerator.getInstance(keyAlgorithm);
 			generator.initialize(keyLength);
-			
 			keyPair = generator.generateKeyPair();
+			result = true;
 		} catch (NoSuchAlgorithmException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -39,12 +40,13 @@ public class MyKeyPair {
 		
 		this.privateKey = keyPair.getPrivate();
 		this.publicKey = keyPair.getPublic();
-	
+		
+		return result;
 	}
 	
-	public void saveKeyPair(String path) {
-		String privateFilename = path + "/privateKey.txt";
-		String publicFilename = path + "/publicKey.txt";
+	void saveKeyPair(String path) throws FileNotFoundException {
+		String privateFilename = path + privateKeyFileName;
+		String publicFilename = path + publicKeyFileName;
 		
 		System.out.println(privateFilename);
 		System.out.println(publicFilename);
@@ -53,7 +55,9 @@ public class MyKeyPair {
 			try(ObjectOutputStream ostream = new ObjectOutputStream(stream)) {
 				ostream.writeObject(this.privateKey);
 			}
-		}catch(IOException e) {
+		} catch(FileNotFoundException e) {
+			throw new FileNotFoundException();
+		} catch(IOException e) {
 			e.printStackTrace();
 		}
 		
@@ -61,12 +65,14 @@ public class MyKeyPair {
 			try(ObjectOutputStream ostream = new ObjectOutputStream(stream)) {
 				ostream.writeObject(this.publicKey);
 			}
-		}catch(IOException e) {
+		} catch(FileNotFoundException e) {
+			throw new FileNotFoundException();
+		} catch(IOException e) {
 			e.printStackTrace();
 		}
 	}
 	
-	PublicKey restorePublicKey(String filename) {
+	PublicKey restorePublicKey(String filename) throws FileNotFoundException {
 		try (FileInputStream stream = new FileInputStream(filename)) {
 			try(ObjectInputStream istream = new ObjectInputStream(stream)) {
 				Object object= istream.readObject();
@@ -77,7 +83,7 @@ public class MyKeyPair {
 			}
 		}  catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new FileNotFoundException();
 		} catch(IOException e) {
 			e.printStackTrace();
 		}
@@ -85,7 +91,7 @@ public class MyKeyPair {
 		return this.publicKey;
 	}
 	
-	PrivateKey restorePrivateKey(String filename) {
+	PrivateKey restorePrivateKey(String filename) throws FileNotFoundException {
 		try (FileInputStream stream = new FileInputStream(filename)) {
 			try(ObjectInputStream istream = new ObjectInputStream(stream)) {
 				Object object= istream.readObject();
@@ -96,7 +102,7 @@ public class MyKeyPair {
 			}
 		}  catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new FileNotFoundException();
 		} catch(IOException e) {
 			e.printStackTrace();
 		}
