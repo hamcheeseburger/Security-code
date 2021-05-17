@@ -26,7 +26,7 @@ import java.io.File;
 import java.util.List;
 import java.awt.event.ActionEvent;
 
-public class mainView {
+class MainView {
 	private ViewController viewController;
 	private JFrame frame;
 	private Button btnSelectFileForSign;
@@ -52,7 +52,7 @@ public class mainView {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					mainView window = new mainView();
+					MainView window = new MainView();
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -64,7 +64,7 @@ public class mainView {
 	/**
 	 * Create the application.
 	 */
-	public mainView() {
+	private MainView() {
 		initialize();
 		viewController = new ViewController();
 	}
@@ -74,6 +74,7 @@ public class mainView {
 	 */
 	private void initialize() {
 		frame = new JFrame();
+		frame.setTitle("20170953_유현지_전자서명프로그램");
 		frame.setBounds(100, 100, 929, 498);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
@@ -294,7 +295,7 @@ public class mainView {
 		frame.getContentPane().add(btnVerify);
 	}
 	
-	public DocumentListener setChanged(Label textField, String text) {
+	private DocumentListener setChanged(Label textField, String text) {
 		return new DocumentListener() {
 
 			@Override
@@ -317,26 +318,26 @@ public class mainView {
 		};
 	}
 	
-	public DropTarget getDropTarget(JTextField textField) {
+	private DropTarget getDropTarget(JTextField textField) {
 		return new DropTarget() {
-			 @SuppressWarnings("unchecked")
-				public synchronized void drop(DropTargetDropEvent evt) {
-			            try {
-			                evt.acceptDrop(DnDConstants.ACTION_COPY);
-			                List<File> droppedFiles = (List<File>) evt
-			                        .getTransferable().getTransferData(
+			@SuppressWarnings("unchecked")
+			public synchronized void drop(DropTargetDropEvent evt) {
+				try {
+					evt.acceptDrop(DnDConstants.ACTION_COPY);
+			        List<File> droppedFiles = (List<File>) evt
+			             .getTransferable().getTransferData(
 			                                DataFlavor.javaFileListFlavor);
-			                for (File file : droppedFiles) {
+			        for (File file : droppedFiles) {
 			                    /*
 			                     * NOTE:
 			                     *  When I change this to a println,
 			                     *  it prints the correct path
 			                     */
-			                	textField.setText(file.getAbsolutePath());
-			                }
-			            } catch (Exception ex) {
+			           textField.setText(file.getAbsolutePath());
+			        }
+			       } catch (Exception ex) {
 			                ex.printStackTrace();
-			            }
+			       }
 		}};
 	}
 }

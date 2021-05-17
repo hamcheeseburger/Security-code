@@ -8,16 +8,16 @@ import exceptions.ObjNullException;
 import function.DigitSign;
 import function.MyKeyPair;
 
-public class ViewController {
+class ViewController {
 	private MyKeyPair myKeyPair;
 	private DigitSign digitSign;
 	
-	public ViewController() {
+	ViewController() {
 		myKeyPair = new MyKeyPair();
 		digitSign = new DigitSign();
 	}
 	
-	public String btnGenerateKeyHandler() throws ObjNullException{
+	String btnGenerateKeyHandler() throws ObjNullException{
 		System.out.println("btnGenerateKey clicked");
 		
 		String directoryPath = exeFileSaver("생성한 키 저장");
@@ -34,19 +34,20 @@ public class ViewController {
 		return directoryPath;
 	}
 	
-	public String btnSelectPrivateKeyHandler() {
+	String btnSelectPrivateKeyHandler() {
 		String filename = exeFileChooser("Private Key 선택");
 		
 		return filename;
 	}
 	
-	public String btnSelectFileForSignHandler() {
+	String btnSelectFileForSignHandler() {
 		String filename = exeFileChooser("서명할 파일 선택");
 		
 		return filename;
 	}
 	
-	public void btnSignHandler(String routePrivateKey, String routeFileForSign) throws ObjNullException, NotSatisfiedException {
+	void btnSignHandler(String routePrivateKey, String routeFileForSign)
+			throws ObjNullException, NotSatisfiedException {
 
 		if(routePrivateKey.equals("") ||  routeFileForSign.equals("")) {
 			throw new NotSatisfiedException();
@@ -57,6 +58,7 @@ public class ViewController {
 		if(directoryPath == null) {
 			throw new ObjNullException();
 		}
+		
 		try {
 			digitSign.sign(routeFileForSign, routePrivateKey, directoryPath);
 		} catch (InvalidKeyException e) {
@@ -65,25 +67,26 @@ public class ViewController {
 		}
 	}
 	
-	public String btnSelectOriginFileHandler() {
+	String btnSelectOriginFileHandler() {
 		String filename = exeFileChooser("원본 파일 선택");
 
 		return filename;
 	}
 	
-	public String btnSelectFileForVerifyHandler() {
+	String btnSelectFileForVerifyHandler() {
 		String filename = exeFileChooser("검증할 파일 선택");
 
 		return filename;
 	}
 	
-	public String btnSelectPublicKeyHandler() {
+	String btnSelectPublicKeyHandler() {
 		String filename = exeFileChooser("Public Key 선택");
 		
 		return filename;
 	}
 	
-	public boolean btnVerifyHandler(String routeOriginFile, String routeFileForVerify, String routePublicKey) throws NotSatisfiedException {
+	boolean btnVerifyHandler(String routeOriginFile, String routeFileForVerify, String routePublicKey) 
+			throws NotSatisfiedException {
 		boolean result = false;
 		
 		if(routeOriginFile.equals("") 
@@ -102,26 +105,22 @@ public class ViewController {
 		return result;
 	}
 	
-	public String exeFileChooser(String keyword) {
+	String exeFileChooser(String keyword) {
 		JFileChooser chooser = new JFileChooser();
 		chooser.setDialogTitle(keyword);
-		
 		chooser.setCurrentDirectory(new File("."));
 
 		int returnVal = chooser.showOpenDialog(null);
 
 		if(returnVal == JFileChooser.APPROVE_OPTION)  {
-
 			File f = chooser.getSelectedFile();
-
 			return f.getAbsolutePath();
-
 		}
 
 		return null;
 	}
 	
-	public String exeFileSaver(String keyword) {
+	String exeFileSaver(String keyword) {
 		JFileChooser chooser = new JFileChooser();
 		chooser.setDialogTitle(keyword);
 		chooser.setCurrentDirectory(new File("."));
@@ -130,11 +129,8 @@ public class ViewController {
 		int returnVal = chooser.showSaveDialog(null);
 
 		if(returnVal == JFileChooser.APPROVE_OPTION)  {
-
 			File f = chooser.getSelectedFile();
-
 			return f.getAbsolutePath();
-
 		}
 
 		return null;

@@ -1,13 +1,9 @@
 package function;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -48,8 +44,10 @@ public class DigitSign {
 		
 		File file = new File(dataFilename);
 		System.out.println(file.getName());
+		String [] splited = file.getName().split("\\.");
+		System.out.println(splited[0]);
 		
-		fileSavePath = fileSavePath + "/" + file.getName() + SIG_STAMP + ".txt";
+		fileSavePath = fileSavePath + "/" + splited[0] + SIG_STAMP + ".txt";
 		
 //		생성한 전자서명 쓰기
 		writeFile(fileSavePath, signature);
