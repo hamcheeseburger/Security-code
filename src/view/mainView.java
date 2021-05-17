@@ -3,41 +3,42 @@ package view;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
-import javax.swing.JPanel;
-import java.awt.BorderLayout;
-import java.awt.Component;
-import javax.swing.Box;
-import java.awt.TextField;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.dnd.DnDConstants;
+import java.awt.dnd.DropTarget;
+import java.awt.dnd.DropTargetDropEvent;
 import java.awt.Label;
 import java.awt.Font;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 import exceptions.NotSatisfiedException;
 import exceptions.ObjNullException;
 
 import javax.swing.JSeparator;
+import javax.swing.JTextField;
 import java.awt.Button;
 import java.awt.event.ActionListener;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.security.SignatureException;
+import java.io.File;
+import java.util.List;
 import java.awt.event.ActionEvent;
 
 public class mainView {
 	private ViewController viewController;
 	private JFrame frame;
 	private Button btnSelectFileForSign;
-	private TextField routeFileForSign;
+	private JTextField routeFileForSign;
 	private Button btnGenerateKey;
-	private TextField routePrivateKey;
+	private JTextField routePrivateKey;
 	private Button btnSelectPrivateKey;
-	private TextField routeFileForVerify;
+	private JTextField routeFileForVerify;
 	private Button btnSelectFileForVerify;
-	private TextField routePublicKey;
+	private JTextField routePublicKey;
 	private Button btnSelectPublicKey;
-	private TextField routeOriginFile;
+	private JTextField routeOriginFile;
 	private Button btnSelectOriginFile;
 	private Button btnSign;
 	private Button btnVerify;
@@ -77,6 +78,16 @@ public class mainView {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
+		resultVerifying = new Label("");
+		resultVerifying.setAlignment(Label.CENTER);
+		resultVerifying.setBounds(588, 398, 189, 23);
+		frame.getContentPane().add(resultVerifying);
+		
+		resultSigning = new Label("");
+		resultSigning.setAlignment(Label.CENTER);
+		resultSigning.setBounds(132, 398, 189, 23);
+		frame.getContentPane().add(resultSigning);
+		
 		JLabel lblNewLabel = new JLabel("\uC804\uC790\uC11C\uBA85 \uD504\uB85C\uADF8\uB7A8");
 		lblNewLabel.setFont(new Font("KoPub돋움체 Medium", Font.BOLD, 22));
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -91,17 +102,21 @@ public class mainView {
 		btnSelectFileForSign.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String path = viewController.btnSelectFileForSignHandler();
-				routeFileForSign.setText(path);
-				resultSigning.setText("서명할 파일이 선택되었습니다.");
+				if(path != null) {
+					routeFileForSign.setText(path);
+				}
 			}
 		});
 		btnSelectFileForSign.setBounds(348, 281, 76, 23);
 		frame.getContentPane().add(btnSelectFileForSign);
 		
-		routeFileForSign = new TextField();
+		routeFileForSign = new JTextField();
 		routeFileForSign.setEditable(false);
 		routeFileForSign.setBounds(35, 281, 307, 23);
 		frame.getContentPane().add(routeFileForSign);
+		routeFileForSign.setDragEnabled(true);
+		routeFileForSign.setDropTarget(getDropTarget(routeFileForSign));
+		routeFileForSign.getDocument().addDocumentListener(setChanged(resultSigning, "서명할 파일이 선택되었습니다."));
 		
 		Label label = new Label("Signing");
 		label.setFont(new Font("KoPub돋움체 Medium", Font.BOLD, 14));
@@ -136,17 +151,22 @@ public class mainView {
 		label_3.setBounds(35, 171, 189, 23);
 		frame.getContentPane().add(label_3);
 		
-		routePrivateKey = new TextField();
+		routePrivateKey = new JTextField();
 		routePrivateKey.setEditable(false);
 		routePrivateKey.setBounds(35, 200, 307, 23);
-		frame.getContentPane().add(routePrivateKey);
+		routePrivateKey.setDragEnabled(true);
+		routePrivateKey.setDropTarget(getDropTarget(routePrivateKey));
+		routePrivateKey.getDocument().addDocumentListener(setChanged(resultSigning, "Private Key가 선택되었습니다."));
 		
+		frame.getContentPane().add(routePrivateKey);
+		routePrivateKey.addPropertyChangeListener(null);
 		btnSelectPrivateKey = new Button("\uD0A4 \uC120\uD0DD");
 		btnSelectPrivateKey.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String path = viewController.btnSelectPrivateKeyHandler();
-				routePrivateKey.setText(path);
-				resultSigning.setText("PrivateKey가 선택되었습니다.");
+				if(path != null) {
+					routePrivateKey.setText(path);
+				}
 			}
 		});
 		btnSelectPrivateKey.setBounds(348, 200, 76, 23);
@@ -162,17 +182,21 @@ public class mainView {
 		label_5.setBounds(488, 179, 164, 23);
 		frame.getContentPane().add(label_5);
 		
-		routeFileForVerify = new TextField();
+		routeFileForVerify = new JTextField();
 		routeFileForVerify.setEditable(false);
 		routeFileForVerify.setBounds(488, 208, 307, 23);
+		routeFileForVerify.setDragEnabled(true);
+		routeFileForVerify.setDropTarget(getDropTarget(routeFileForVerify));
+		routeFileForVerify.getDocument().addDocumentListener(setChanged(resultVerifying, "검증할 파일이 선택되었습니다."));
 		frame.getContentPane().add(routeFileForVerify);
 		
 		btnSelectFileForVerify = new Button("\uD30C\uC77C\uC120\uD0DD");
 		btnSelectFileForVerify.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String path = viewController.btnSelectFileForVerifyHandler();
-				routeFileForVerify.setText(path);
-				resultVerifying.setText("검증할 파일이 선택되었습니다.");
+				if(path != null) {
+					routeFileForVerify.setText(path);
+				}
 			}
 		});
 		btnSelectFileForVerify.setBounds(801, 208, 76, 23);
@@ -182,17 +206,21 @@ public class mainView {
 		label_3_1.setBounds(488, 252, 189, 23);
 		frame.getContentPane().add(label_3_1);
 		
-		routePublicKey = new TextField();
+		routePublicKey = new JTextField();
 		routePublicKey.setEditable(false);
 		routePublicKey.setBounds(488, 281, 300, 23);
+		routePublicKey.setDragEnabled(true);
+		routePublicKey.setDropTarget(getDropTarget(routePublicKey));
+		routePublicKey.getDocument().addDocumentListener(setChanged(resultVerifying, "PublicKey가 선택되었습니다."));
 		frame.getContentPane().add(routePublicKey);
 		
 		btnSelectPublicKey = new Button("\uD0A4 \uC120\uD0DD");
 		btnSelectPublicKey.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String path = viewController.btnSelectPublicKeyHandler();
-				routePublicKey.setText(path);
-				resultVerifying.setText("PublicKey가 선택되었습니다.");
+				if(path != null) {
+					routePublicKey.setText(path);
+				}
 			}
 		});
 		btnSelectPublicKey.setBounds(801, 281, 76, 23);
@@ -202,19 +230,24 @@ public class mainView {
 		label_5_1.setBounds(488, 98, 164, 23);
 		frame.getContentPane().add(label_5_1);
 		
-		routeOriginFile = new TextField();
+		routeOriginFile = new JTextField();
+		routeOriginFile.setDragEnabled(true);
 		routeOriginFile.setEditable(false);
 		routeOriginFile.setBounds(488, 127, 307, 23);
+		routeOriginFile.setDropTarget(getDropTarget(routeOriginFile));
+		routeOriginFile.getDocument().addDocumentListener(setChanged(resultVerifying, "원본 파일이 선택되었습니다."));
 		frame.getContentPane().add(routeOriginFile);
 		
 		btnSelectOriginFile = new Button("\uD30C\uC77C\uC120\uD0DD");
 		btnSelectOriginFile.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String path = viewController.btnSelectOriginFileHandler();
-				routeOriginFile.setText(path);
-				resultVerifying.setText("원본 파일이 선택되었습니다.");
+				if(path != null) {
+					routeOriginFile.setText(path);
+				}
 			}
 		});
+		
 		btnSelectOriginFile.setBounds(801, 127, 76, 23);
 		frame.getContentPane().add(btnSelectOriginFile);
 		
@@ -222,7 +255,7 @@ public class mainView {
 		btnSign.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					viewController.btnSignHandler();
+					viewController.btnSignHandler(routePrivateKey.getText(), routeFileForSign.getText());
 					resultSigning.setText("서명파일이 생성되었습니다.");
 				} catch (ObjNullException e1) {
 					// TODO Auto-generated catch block
@@ -234,6 +267,7 @@ public class mainView {
 				}
 			}
 		});
+		
 		btnSign.setBounds(173, 351, 76, 23);
 		frame.getContentPane().add(btnSign);
 		
@@ -241,7 +275,7 @@ public class mainView {
 		btnVerify.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					boolean result = viewController.btnVerifyHandler();
+					boolean result = viewController.btnVerifyHandler(routeOriginFile.getText(), routeFileForVerify.getText(), routePublicKey.getText());
 					
 					if(result) {
 						resultVerifying.setText("원본파일과 일치합니다.");
@@ -255,17 +289,54 @@ public class mainView {
 				}
 			}
 		});
+		
 		btnVerify.setBounds(649, 351, 76, 23);
 		frame.getContentPane().add(btnVerify);
-		
-		resultVerifying = new Label("");
-		resultVerifying.setAlignment(Label.CENTER);
-		resultVerifying.setBounds(588, 398, 189, 23);
-		frame.getContentPane().add(resultVerifying);
-		
-		resultSigning = new Label("");
-		resultSigning.setAlignment(Label.CENTER);
-		resultSigning.setBounds(132, 398, 189, 23);
-		frame.getContentPane().add(resultSigning);
+	}
+	
+	public DocumentListener setChanged(Label textField, String text) {
+		return new DocumentListener() {
+
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				// TODO Auto-generated method stub
+				textField.setText(text);
+			}
+
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				// TODO Auto-generated method stub
+			}
+			
+		};
+	}
+	
+	public DropTarget getDropTarget(JTextField textField) {
+		return new DropTarget() {
+			 @SuppressWarnings("unchecked")
+				public synchronized void drop(DropTargetDropEvent evt) {
+			            try {
+			                evt.acceptDrop(DnDConstants.ACTION_COPY);
+			                List<File> droppedFiles = (List<File>) evt
+			                        .getTransferable().getTransferData(
+			                                DataFlavor.javaFileListFlavor);
+			                for (File file : droppedFiles) {
+			                    /*
+			                     * NOTE:
+			                     *  When I change this to a println,
+			                     *  it prints the correct path
+			                     */
+			                	textField.setText(file.getAbsolutePath());
+			                }
+			            } catch (Exception ex) {
+			                ex.printStackTrace();
+			            }
+		}};
 	}
 }

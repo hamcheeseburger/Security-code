@@ -16,7 +16,7 @@ public class Cryptography {
 			try(ObjectOutputStream ostream = new ObjectOutputStream(stream)) {
 				ostream.writeObject(publicKey);
 			}
-		}catch(IOException e) {
+		} catch(IOException e) {
 			e.printStackTrace();
 		}
 	}
