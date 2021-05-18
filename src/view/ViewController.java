@@ -6,6 +6,7 @@ import java.security.InvalidKeyException;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import exceptions.GenerateKeyException;
 import exceptions.NotSatisfiedException;
 import function.SignatureManager;
 
@@ -17,7 +18,7 @@ class ViewController {
 		manager = new SignatureManager();
 	}
 	
-	String btnGenerateKeyHandler() throws FileNotFoundException {
+	String btnGenerateKeyHandler() throws GenerateKeyException {
 		System.out.println("btnGenerateKey clicked");
 		
 		String directoryPath = exeFileSaver("생성한 키 저장");
@@ -25,7 +26,9 @@ class ViewController {
 		System.out.println(directoryPath);
 		
 		if(directoryPath != null) {
-			manager.generateAndSaveKeyPair(directoryPath);	
+			if(!manager.generateAndSaveKeyPair(directoryPath)) {
+				throw new GenerateKeyException();
+			}
 		}
 		
 		return directoryPath;

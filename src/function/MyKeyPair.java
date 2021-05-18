@@ -44,7 +44,7 @@ class MyKeyPair {
 		return result;
 	}
 	
-	void saveKeyPair(String path) throws FileNotFoundException {
+	void saveKeyPair(String path) {
 		String privateFilename = path + privateKeyFileName;
 		String publicFilename = path + publicKeyFileName;
 		
@@ -56,7 +56,7 @@ class MyKeyPair {
 				ostream.writeObject(this.privateKey);
 			}
 		} catch(FileNotFoundException e) {
-			throw new FileNotFoundException();
+			e.printStackTrace();
 		} catch(IOException e) {
 			e.printStackTrace();
 		}
@@ -66,7 +66,7 @@ class MyKeyPair {
 				ostream.writeObject(this.publicKey);
 			}
 		} catch(FileNotFoundException e) {
-			throw new FileNotFoundException();
+			e.printStackTrace();
 		} catch(IOException e) {
 			e.printStackTrace();
 		}

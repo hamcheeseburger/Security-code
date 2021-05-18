@@ -15,6 +15,7 @@ import javax.swing.SwingConstants;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import exceptions.GenerateKeyException;
 import exceptions.NotSatisfiedException;
 
 import javax.swing.JSeparator;
@@ -27,6 +28,7 @@ import java.security.InvalidKeyException;
 import java.util.List;
 import java.awt.event.ActionEvent;
 import java.awt.Color;
+import java.awt.SystemColor;
 
 class MainView {
 	private ViewController viewController;
@@ -76,27 +78,28 @@ class MainView {
 	 */
 	private void initialize() {
 		frame = new JFrame();
+		frame.getContentPane().setBackground(SystemColor.control);
 		frame.setTitle("20170953_유현지_전자서명프로그램");
 		frame.setBounds(100, 100, 929, 498);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
 		resultVerifying = new Label("");
-		resultVerifying.setFont(new Font("KoPub돋움체 Medium", Font.BOLD, 14));
+		resultVerifying.setFont(new Font("KoPubWorld돋움체 Bold", Font.BOLD, 14));
 		resultVerifying.setBackground(Color.WHITE);
 		resultVerifying.setAlignment(Label.CENTER);
 		resultVerifying.setBounds(488, 380, 389, 54);
 		frame.getContentPane().add(resultVerifying);
 		
 		resultSigning = new Label("");
-		resultSigning.setFont(new Font("KoPub돋움체 Medium", Font.BOLD, 14));
+		resultSigning.setFont(new Font("KoPubWorld돋움체 Bold", Font.BOLD, 14));
 		resultSigning.setBackground(Color.WHITE);
 		resultSigning.setAlignment(Label.CENTER);
 		resultSigning.setBounds(35, 380, 389, 54);
 		frame.getContentPane().add(resultSigning);
 		
 		JLabel lblNewLabel = new JLabel("\uC804\uC790\uC11C\uBA85 \uD504\uB85C\uADF8\uB7A8");
-		lblNewLabel.setFont(new Font("KoPub돋움체 Medium", Font.BOLD, 22));
+		lblNewLabel.setFont(new Font("KoPubWorld돋움체 Bold", Font.BOLD, 22));
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel.setBounds(0, 0, 913, 46);
 		frame.getContentPane().add(lblNewLabel);
@@ -127,12 +130,13 @@ class MainView {
 		routeFileForSign.getDocument().addDocumentListener(setChanged(resultSigning, "서명할 파일이 선택되었습니다."));
 		
 		Label label = new Label("Signing");
-		label.setFont(new Font("KoPub돋움체 Medium", Font.BOLD, 14));
+		label.setFont(new Font("KoPubWorld돋움체 Bold", Font.BOLD, 14));
 		label.setAlignment(Label.CENTER);
 		label.setBounds(193, 52, 69, 23);
 		frame.getContentPane().add(label);
 		
 		Label label_1 = new Label("\uC11C\uBA85\uD560 \uD30C\uC77C \uC120\uD0DD");
+		label_1.setFont(new Font("KoPubWorld돋움체 Light", Font.PLAIN, 12));
 		label_1.setBounds(35, 252, 116, 23);
 		frame.getContentPane().add(label_1);
 		
@@ -145,7 +149,7 @@ class MainView {
 						resultSigning.setText("키 생성 성공");
 					}
 
-				} catch (FileNotFoundException e1) {
+				} catch (GenerateKeyException e1) {
 					// TODO Auto-generated catch block
 					resultSigning.setText("키 생성 실패");
 				}
@@ -156,11 +160,12 @@ class MainView {
 		frame.getContentPane().add(btnGenerateKey);
 		
 		Label label_2 = new Label("\uD0A4\uAC00 \uC5C6\uB2E4\uBA74 \uC544\uB798 \uBC84\uD2BC\uC744 \uB20C\uB7EC \uC0DD\uC131\uD558\uC138\uC694.");
-		label_2.setFont(new Font("KoPub돋움체 Medium", Font.PLAIN, 12));
+		label_2.setFont(new Font("KoPubWorld돋움체 Light", Font.PLAIN, 12));
 		label_2.setBounds(35, 98, 259, 23);
 		frame.getContentPane().add(label_2);
 		
 		Label label_3 = new Label("\uC11C\uBA85\uC5D0 \uC0AC\uC6A9\uD560 PrivateKey \uC120\uD0DD");
+		label_3.setFont(new Font("KoPubWorld돋움체 Light", Font.PLAIN, 12));
 		label_3.setBounds(35, 171, 189, 23);
 		frame.getContentPane().add(label_3);
 		
@@ -187,7 +192,7 @@ class MainView {
 		frame.getContentPane().add(btnSelectPrivateKey);
 		
 		Label label_4 = new Label("Verifying");
-		label_4.setFont(new Font("KoPub돋움체 Medium", Font.BOLD, 14));
+		label_4.setFont(new Font("KoPubWorld돋움체 Bold", Font.BOLD, 14));
 		label_4.setAlignment(Label.CENTER);
 		label_4.setBounds(649, 52, 69, 23);
 		frame.getContentPane().add(label_4);
@@ -345,6 +350,7 @@ class MainView {
 		};
 	}
 	
+	@SuppressWarnings("serial")
 	private DropTarget getDropTarget(JTextField textField) {
 		return new DropTarget() {
 			@SuppressWarnings("unchecked")

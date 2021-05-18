@@ -18,8 +18,7 @@ public class SignatureManager {
 		digitSign = new DigitSign();
 	}
 	
-	public boolean generateAndSaveKeyPair(String path)
-			throws FileNotFoundException {
+	public boolean generateAndSaveKeyPair(String path) {
 		boolean result = false;
 		if(myKeyPair.generateKeyPair()) {
 			myKeyPair.saveKeyPair(path);
