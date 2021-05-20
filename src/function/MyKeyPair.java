@@ -15,8 +15,7 @@ import java.security.PublicKey;
 class MyKeyPair {
 	private static final String keyAlgorithm = "RSA";
 	private static final int keyLength = 1024;
-	private static final String publicKeyFileName = "/PublicKey.pem";
-	private static final String privateKeyFileName = "/PrivateKey.pem";
+	private static final String KEY_EXTENSION = ".pem";
 	private PublicKey publicKey;
 	private PrivateKey privateKey;
 	
@@ -45,8 +44,8 @@ class MyKeyPair {
 	}
 	
 	void saveKeyPair(String path) {
-		String privateFilename = path + privateKeyFileName;
-		String publicFilename = path + publicKeyFileName;
+		String privateFilename = path + "/PrivateKey" + KEY_EXTENSION;
+		String publicFilename = path + "/Publickey" + KEY_EXTENSION;
 		
 		System.out.println(privateFilename);
 		System.out.println(publicFilename);
@@ -72,7 +71,7 @@ class MyKeyPair {
 		}
 	}
 	
-	PublicKey restorePublicKey(String filename) throws FileNotFoundException {
+	PublicKey restorePublicKey(String filename) throws FileNotFoundException , ClassCastException {
 		try (FileInputStream stream = new FileInputStream(filename)) {
 			try(ObjectInputStream istream = new ObjectInputStream(stream)) {
 				Object object= istream.readObject();
@@ -80,6 +79,8 @@ class MyKeyPair {
 			} catch (ClassNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+			}  catch(ClassCastException e) {
+				throw new ClassCastException();
 			}
 		}  catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -91,7 +92,7 @@ class MyKeyPair {
 		return this.publicKey;
 	}
 	
-	PrivateKey restorePrivateKey(String filename) throws FileNotFoundException {
+	PrivateKey restorePrivateKey(String filename) throws FileNotFoundException, ClassCastException {
 		try (FileInputStream stream = new FileInputStream(filename)) {
 			try(ObjectInputStream istream = new ObjectInputStream(stream)) {
 				Object object= istream.readObject();
@@ -99,6 +100,8 @@ class MyKeyPair {
 			} catch (ClassNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+			}  catch(ClassCastException e) {
+				throw new ClassCastException();
 			}
 		}  catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block

@@ -12,6 +12,8 @@ import java.security.PublicKey;
 import java.security.Signature;
 import java.security.SignatureException;
 
+import org.bouncycastle.util.Arrays;
+
 class DigitSign {
 	private static final String algorithm = "SHA256withRSA";
 	
@@ -35,6 +37,8 @@ class DigitSign {
 		} catch (SignatureException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
+			Arrays.fill(content, (byte) ' ');
 		}
 		
 		return signature;
@@ -60,6 +64,9 @@ class DigitSign {
 		} catch (SignatureException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
+			Arrays.fill(originContent, (byte) ' ');
+			Arrays.fill(signedContent, (byte) ' ');
 		}
 		
 		return rslt;

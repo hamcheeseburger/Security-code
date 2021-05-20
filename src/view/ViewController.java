@@ -1,4 +1,5 @@
 package view;
+import java.awt.EventQueue;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.security.InvalidKeyException;
@@ -13,7 +14,6 @@ import function.SignatureManager;
 
 class ViewController {
 	private SignatureManager manager;
-	
 	ViewController() {
 		manager = new SignatureManager();
 	}
@@ -47,7 +47,7 @@ class ViewController {
 	}
 	
 	void btnSignHandler(String routePrivateKey, String routeFileForSign)
-			throws NotSatisfiedException, InvalidKeyException, FileNotFoundException {
+			throws NotSatisfiedException, InvalidKeyException, FileNotFoundException, ClassCastException {
 
 		if(routePrivateKey.equals("") ||  routeFileForSign.equals("")) {
 			throw new NotSatisfiedException();
@@ -80,7 +80,7 @@ class ViewController {
 	}
 	
 	boolean btnVerifyHandler(String routeOriginFile, String routeFileForVerify, String routePublicKey) 
-			throws NotSatisfiedException, InvalidKeyException, FileNotFoundException {
+			throws NotSatisfiedException, InvalidKeyException, FileNotFoundException, ClassCastException {
 		
 		if(routeOriginFile.equals("") 
 				|| routeFileForVerify.equals("")

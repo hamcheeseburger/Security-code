@@ -29,7 +29,7 @@ public class SignatureManager {
 	}
 	
 	public void signAndSaveFile(String dataFilename, String keyFilename, String fileSavePath)
-			throws InvalidKeyException, FileNotFoundException {
+			throws InvalidKeyException, FileNotFoundException, ClassCastException {
 		PrivateKey privateKey = myKeyPair.restorePrivateKey(keyFilename);
 		
 		byte [] signature = digitSign.sign(dataFilename, privateKey);
@@ -46,7 +46,7 @@ public class SignatureManager {
 	}
 	
 	public boolean verify(String dataFilename, String sigFilename, String keyFilename) 
-			throws InvalidKeyException, FileNotFoundException {
+			throws InvalidKeyException, FileNotFoundException, ClassCastException {
 		
 		PublicKey publicKey = myKeyPair.restorePublicKey(keyFilename);
 		
