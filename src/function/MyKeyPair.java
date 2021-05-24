@@ -16,6 +16,8 @@ class MyKeyPair {
 	private static final String keyAlgorithm = "RSA";
 	private static final int keyLength = 1024;
 	private static final String KEY_EXTENSION = ".pem";
+	private static final String DEFAULT_PRIVATE_KEY = "PrivateKey";
+	private static final String DEFAULT_PUBLIC_KEY = "PublicKey";
 	private PublicKey publicKey;
 	private PrivateKey privateKey;
 	
@@ -43,9 +45,17 @@ class MyKeyPair {
 		return result;
 	}
 	
-	void saveKeyPair(String path) {
-		String privateFilename = path + "/PrivateKey" + KEY_EXTENSION;
-		String publicFilename = path + "/Publickey" + KEY_EXTENSION;
+	void saveKeyPair(String path, String publicKeyName, String privateKeyName) {
+		if(publicKeyName.equals("")) {
+			publicKeyName = DEFAULT_PUBLIC_KEY;
+		}
+		
+		if(privateKeyName.equals("")) {
+			privateKeyName = DEFAULT_PRIVATE_KEY;
+		}
+		
+		String privateFilename = path + "/" + privateKeyName + KEY_EXTENSION;
+		String publicFilename = path + "/" + publicKeyName + KEY_EXTENSION;
 		
 		System.out.println(privateFilename);
 		System.out.println(publicFilename);

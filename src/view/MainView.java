@@ -49,6 +49,19 @@ class MainView {
 	private Label resultVerifying;
 	private Label resultSigning;
 
+	
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					MainView window = new MainView();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+	
 	/**
 	 * Create the application.
 	 */
@@ -128,8 +141,18 @@ class MainView {
 		btnGenerateKey = new Button("\uD0A4\uC0DD\uC131\uD558\uAE30");
 		btnGenerateKey.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				String publicKeyName = JOptionPane.showInputDialog("저장할 공개키 파일 명을 입력하세요", "PublicKey");
+				if(publicKeyName == null) {
+					return;
+				}
+				
+				String privateKeyName = JOptionPane.showInputDialog("저장할 사설키 파일 명을 입력하세요", "PrivateKey");
+				if(privateKeyName == null) {
+					return;
+				}
+				
 				try {
-					String path = viewController.btnGenerateKeyHandler();
+					String path = viewController.btnGenerateKeyHandler(publicKeyName, privateKeyName);
 					if(path != null) {
 						resultSigning.setText("키 생성 성공");
 					}
@@ -261,8 +284,13 @@ class MainView {
 		btnSign = new Button("\uC11C\uBA85\uD558\uAE30");
 		btnSign.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				String signedFileName = JOptionPane.showInputDialog("저장할 전자서명 파일 명을 입력하세요", "Signed");
+				if(signedFileName == null) {
+					return;
+				}
+				
 				try {
-					viewController.btnSignHandler(routePrivateKey.getText(), routeFileForSign.getText());
+					viewController.btnSignHandler(routePrivateKey.getText(), routeFileForSign.getText(), signedFileName);
 					resetSigning();
 					resultSigning.setText("서명파일이 생성되었습니다.");
 				} catch (NotSatisfiedException e1) {

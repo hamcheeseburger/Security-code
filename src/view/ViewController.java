@@ -18,7 +18,7 @@ class ViewController {
 		manager = new SignatureManager();
 	}
 	
-	String btnGenerateKeyHandler() throws GenerateKeyException {
+	String btnGenerateKeyHandler(String publicKeyName, String privateKeyName) throws GenerateKeyException {
 		System.out.println("btnGenerateKey clicked");
 		
 		String directoryPath = exeFileSaver("생성한 키 저장");
@@ -26,7 +26,7 @@ class ViewController {
 		System.out.println(directoryPath);
 		
 		if(directoryPath != null) {
-			if(!manager.generateAndSaveKeyPair(directoryPath)) {
+			if(!manager.generateAndSaveKeyPair(directoryPath, publicKeyName, privateKeyName)) {
 				throw new GenerateKeyException();
 			}
 		}
@@ -46,7 +46,7 @@ class ViewController {
 		return filename;
 	}
 	
-	void btnSignHandler(String routePrivateKey, String routeFileForSign)
+	void btnSignHandler(String routePrivateKey, String routeFileForSign, String signedFileName)
 			throws NotSatisfiedException, InvalidKeyException, FileNotFoundException, ClassCastException {
 
 		if(routePrivateKey.equals("") ||  routeFileForSign.equals("")) {
@@ -56,7 +56,7 @@ class ViewController {
 		String directoryPath = exeFileSaver("서명한 파일 저장");
 		
 		if(directoryPath != null) {
-			manager.signAndSaveFile(routeFileForSign, routePrivateKey, directoryPath);
+			manager.signAndSaveFile(routeFileForSign, routePrivateKey, directoryPath, signedFileName);
 			
 		}
 	}

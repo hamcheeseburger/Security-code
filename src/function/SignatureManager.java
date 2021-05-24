@@ -18,28 +18,31 @@ public class SignatureManager {
 		digitSign = new DigitSign();
 	}
 	
-	public boolean generateAndSaveKeyPair(String path) {
+	public boolean generateAndSaveKeyPair(String path, String privateKeyName, String publicKeyName) {
 		boolean result = false;
 		if(myKeyPair.generateKeyPair()) {
-			myKeyPair.saveKeyPair(path);
+			myKeyPair.saveKeyPair(path, privateKeyName, publicKeyName);
 			result = true;
 		}
 		
 		return result;
 	}
 	
-	public void signAndSaveFile(String dataFilename, String keyFilename, String fileSavePath)
+	public void signAndSaveFile(String dataFilename, String keyFilename, String fileSavePath, String signedFileName)
 			throws InvalidKeyException, FileNotFoundException, ClassCastException {
 		PrivateKey privateKey = myKeyPair.restorePrivateKey(keyFilename);
 		
 		byte [] signature = digitSign.sign(dataFilename, privateKey);
 		
-		File file = new File(dataFilename);
-		System.out.println(file.getName());
-		String [] splited = file.getName().split("\\.");
-		System.out.println(splited[0]);
+		if(signedFileName.equals("")) {
 		
-		fileSavePath = fileSavePath + "/" + splited[0] + SIG_STAMP + EXTENTION;
+			File file = new File(dataFilename);
+			System.out.println(file.getName());
+			String [] splited = file.getName().split("\\.");
+			System.out.println(splited[0]);
+			signedFileName = splited[0] + SIG_STAMP;
+		}
+		fileSavePath = fileSavePath + "/" + signedFileName + EXTENTION;
 		
 //		생성한 전자서명 쓰기
 		digitSign.writeFile(fileSavePath, signature);
