@@ -29,7 +29,6 @@ class DigitSign {
 			sig.initSign(privateKey);
 			sig.update(content);
 			signature = sig.sign();
-			
 		} catch (NoSuchAlgorithmException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -13,8 +13,8 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 
 class MyKeyPair {
-	private static final String keyAlgorithm = "RSA";
-	private static final int keyLength = 1024;
+	private static final String KEY_ALGORITHM = "RSA";
+	private static final int KEY_LENGTH = 1024;
 	private static final String KEY_EXTENSION = ".pem";
 	private static final String DEFAULT_PRIVATE_KEY = "PrivateKey";
 	private static final String DEFAULT_PUBLIC_KEY = "PublicKey";
@@ -30,8 +30,8 @@ class MyKeyPair {
 		KeyPair keyPair = null;
 		boolean result = false;
 		try {
-			KeyPairGenerator generator = KeyPairGenerator.getInstance(keyAlgorithm);
-			generator.initialize(keyLength);
+			KeyPairGenerator generator = KeyPairGenerator.getInstance(KEY_ALGORITHM);
+			generator.initialize(KEY_LENGTH);
 			keyPair = generator.generateKeyPair();
 			result = true;
 		} catch (NoSuchAlgorithmException e) {
@@ -60,20 +60,20 @@ class MyKeyPair {
 		System.out.println(privateFilename);
 		System.out.println(publicFilename);
 		
-		try (FileOutputStream stream = new FileOutputStream(privateFilename)) {
-			try(ObjectOutputStream ostream = new ObjectOutputStream(stream)) {
-				ostream.writeObject(this.privateKey);
-			}
+		try (FileOutputStream stream = new FileOutputStream(privateFilename);
+				ObjectOutputStream ostream = new ObjectOutputStream(stream)) {
+			ostream.writeObject(this.privateKey);
+			
 		} catch(FileNotFoundException e) {
 			e.printStackTrace();
 		} catch(IOException e) {
 			e.printStackTrace();
 		}
 		
-		try (FileOutputStream stream = new FileOutputStream(publicFilename)) {
-			try(ObjectOutputStream ostream = new ObjectOutputStream(stream)) {
-				ostream.writeObject(this.publicKey);
-			}
+		try (FileOutputStream stream = new FileOutputStream(publicFilename);
+				ObjectOutputStream ostream = new ObjectOutputStream(stream)) {
+			ostream.writeObject(this.publicKey);
+			
 		} catch(FileNotFoundException e) {
 			e.printStackTrace();
 		} catch(IOException e) {
