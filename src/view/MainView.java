@@ -301,7 +301,7 @@ class MainView {
 					JOptionPane.showMessageDialog(null, "키가 유효하지 않습니다.", "에러", 0);
 				} catch (FileNotFoundException e1) {
 					// TODO Auto-generated catch block
-					JOptionPane.showMessageDialog(null, "파일을 찾을 수 없습니다.", "에러", 0);
+					JOptionPane.showMessageDialog(null, "폴더를 찾을 수 없습니다.", "에러", 0);
 				} catch(ClassCastException e1) {
 					JOptionPane.showMessageDialog(null, "PrivateKey가 아닙니다.", "에러", 0);
 				} 
@@ -333,7 +333,7 @@ class MainView {
 					JOptionPane.showMessageDialog(null, "키가 유효하지 않습니다.", "에러", 0);
 				} catch (FileNotFoundException e1) {
 					// TODO Auto-generated catch block
-					JOptionPane.showMessageDialog(null, "파일을 찾을 수 없습니다.", "에러", 0);
+					JOptionPane.showMessageDialog(null, "폴더를 찾을 수 없습니다.", "에러", 0);
 				} catch(ClassCastException e1) {
 					JOptionPane.showMessageDialog(null, "PublicKey가 아닙니다.", "에러", 0);
 				} 

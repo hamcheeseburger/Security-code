@@ -45,7 +45,7 @@ class MyKeyPair {
 		return result;
 	}
 	
-	void saveKeyPair(String path, String publicKeyName, String privateKeyName) {
+	void saveKeyPair(String path, String publicKeyName, String privateKeyName) throws FileNotFoundException{
 		if(publicKeyName.equals("")) {
 			publicKeyName = DEFAULT_PUBLIC_KEY;
 		}
@@ -65,7 +65,7 @@ class MyKeyPair {
 			ostream.writeObject(this.privateKey);
 			
 		} catch(FileNotFoundException e) {
-			e.printStackTrace();
+			throw new FileNotFoundException();
 		} catch(IOException e) {
 			e.printStackTrace();
 		}
@@ -82,42 +82,42 @@ class MyKeyPair {
 	}
 	
 	PublicKey restorePublicKey(String filename) throws FileNotFoundException , ClassCastException {
-		try (FileInputStream stream = new FileInputStream(filename)) {
-			try(ObjectInputStream istream = new ObjectInputStream(stream)) {
-				Object object= istream.readObject();
-				this.publicKey = (PublicKey) object;
-			} catch (ClassNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}  catch(ClassCastException e) {
-				throw new ClassCastException();
-			}
+		try (FileInputStream stream = new FileInputStream(filename);
+				ObjectInputStream istream = new ObjectInputStream(stream)) {
+			
+			Object object= istream.readObject();
+			this.publicKey = (PublicKey) object;
+		
 		}  catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			throw new FileNotFoundException();
 		} catch(IOException e) {
 			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}  catch(ClassCastException e) {
+			throw new ClassCastException();
 		}
 		
 		return this.publicKey;
 	}
 	
 	PrivateKey restorePrivateKey(String filename) throws FileNotFoundException, ClassCastException {
-		try (FileInputStream stream = new FileInputStream(filename)) {
-			try(ObjectInputStream istream = new ObjectInputStream(stream)) {
-				Object object= istream.readObject();
-				this.privateKey = (PrivateKey) object;
-			} catch (ClassNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}  catch(ClassCastException e) {
-				throw new ClassCastException();
-			}
+		try (FileInputStream stream = new FileInputStream(filename);
+				ObjectInputStream istream = new ObjectInputStream(stream)) {		
+			Object object= istream.readObject();
+			this.privateKey = (PrivateKey) object;		
 		}  catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			throw new FileNotFoundException();
 		} catch(IOException e) {
 			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}  catch(ClassCastException e) {
+			throw new ClassCastException();
 		}
 		
 		return this.privateKey;

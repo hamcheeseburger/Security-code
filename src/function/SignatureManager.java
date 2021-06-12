@@ -21,8 +21,15 @@ public class SignatureManager {
 	public boolean generateAndSaveKeyPair(String path, String privateKeyName, String publicKeyName) {
 		boolean result = false;
 		if(myKeyPair.generateKeyPair()) {
-			myKeyPair.saveKeyPair(path, privateKeyName, publicKeyName);
-			result = true;
+			try {
+				myKeyPair.saveKeyPair(path, privateKeyName, publicKeyName);
+				result = true;
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				System.err.println("폴더 경로를 찾을 수 없음");
+				result = false;
+			}
+			
 		}
 		
 		return result;
